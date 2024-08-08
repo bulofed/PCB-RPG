@@ -1,6 +1,7 @@
 import pygame, sys
 from pygame.locals import *
 from const import *
+from player import Player
 
 class Game:
     def __init__(self):
@@ -13,23 +14,43 @@ class Game:
         self.fullscreen: bool = False
         self.screen_size = self.screen.get_size()
         
+        self.player = None
+    
+    def create_player(self):
+        player_name = input("Enter player's name: ")
+        player_class = input("Enter player's class: ")
+        self.player = Player(player_name, player_class)
+        self.player.save("player_save.pkl")
+        print(self.player)
+        
+    def load_player(self):
+        try:
+            self.player = Player.load("player_save.pkl")
+            print(self.player)
+        except FileNotFoundError:
+            print("No player found.")
+            self.create_player()
+        
+    def manage_events(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_F11:
+                    self.fullscreen = not self.fullscreen
+                    if self.fullscreen:
+                        self.screen = pygame.display.set_mode(self.MONITOR_SIZE, pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE)
+                    else:
+                        self.screen = pygame.display.set_mode(self.screen_size, pygame.DOUBLEBUF | pygame.HWSURFACE)
+        
     def run(self):
+        
+        self.load_player()
 
         while self.running:
             
             self.screen.fill(BG)
-            
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_F11:
-                        self.fullscreen = not self.fullscreen
-                        if self.fullscreen:
-                            self.screen = pygame.display.set_mode(self.MONITOR_SIZE, pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE)
-                        else:
-                            self.screen = pygame.display.set_mode(self.screen_size, pygame.DOUBLEBUF | pygame.HWSURFACE)
-            
+            self.manage_events()
             pygame.display.update()
             self.clock.tick(FPS)
 
