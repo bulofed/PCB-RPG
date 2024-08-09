@@ -2,6 +2,8 @@ import pygame, sys
 from pygame.locals import *
 from const import *
 from player import Player
+from gamestatemanager import GameStateManager
+from main_menu import MainMenu
 
 class Game:
     def __init__(self):
@@ -13,6 +15,16 @@ class Game:
         self.running: bool = True
         self.fullscreen: bool = False
         self.screen_size = self.screen.get_size()
+        self.font = pygame.font.Font(None, 36)
+        
+        self.mouse_pos = pygame.mouse.get_pos()
+        
+        self.gameStateManager = GameStateManager('main_menu')
+        self.mainMenu = MainMenu(self.screen, self.gameStateManager, self.font)
+        
+        self.states = {
+            'main_menu': self.mainMenu
+        }
         
         self.player = None
     
@@ -42,6 +54,7 @@ class Game:
                         self.screen = pygame.display.set_mode(self.MONITOR_SIZE, pygame.FULLSCREEN | pygame.DOUBLEBUF | pygame.HWSURFACE)
                     else:
                         self.screen = pygame.display.set_mode(self.screen_size, pygame.DOUBLEBUF | pygame.HWSURFACE)
+                    self.mainMenu.update_buttons()
         
     def run(self):
         
@@ -49,8 +62,15 @@ class Game:
 
         while self.running:
             
-            self.screen.fill(BG)
+            self.mouse_pos = pygame.mouse.get_pos()
+            
             self.manage_events()
+            
+            self.states[self.gameStateManager.get_state].run()
+            
+            for button in self.states[self.gameStateManager.get_state].buttons:
+                button.changeColor(self.mouse_pos)
+            
             pygame.display.update()
             self.clock.tick(FPS)
 
