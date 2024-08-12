@@ -1,3 +1,3 @@
-import pygame, sys, os
+import pygame, sys, os, pygame_gui
 
-__all__ = ['pygame', 'sys', 'os']
+__all__ = ['pygame', 'sys', 'os', 'pygame_gui']

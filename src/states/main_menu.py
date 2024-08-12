@@ -1,33 +1,49 @@
+from src.utils.imports import pygame_gui, pygame
 from src.states.state import State
-from src.gui.button import Button
-from src.utils.imports import pygame, sys
 
 class MainMenu(State):
-    def __init__(self, display, gameStateManager, font) -> None:
-        super().__init__(display, gameStateManager)
-        self.font = font
-        self.create_buttons()
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
     
-    def create_buttons(self):
+    def set_gui(self):
         
-        start_game_button = Button(
-            size=(200, 50),
-            text="Start Game",
-            font=self.font,
-            text_color=(0, 0, 0),
-            hovered_text_color=(255, 255, 255),
-            anchor=['center'],
+        screen_width = self.display.get_width()
+        
+        container_rect = pygame.Rect((0, 0), (screen_width - 100, 50))
+        container_rect.bottom = -20
+        
+        container = pygame_gui.core.UIContainer(
+            relative_rect=container_rect,
+            manager=self.gui_manager,
+            anchors={'bottom': 'bottom', 'centerx': 'centerx'}
         )
         
-        self.buttons = [start_game_button]
+        self.start_btn = pygame_gui.elements.UIButton(
+            relative_rect=pygame.Rect((0, 0), (200, 50)),
+            text='Start Game',
+            manager=self.gui_manager,
+            container=container
+        )
+        
+        quit_btn_rect = pygame.Rect((0, 0), (200, 50))
+        quit_btn_rect.right = 0
+        
+        self.quit_btn = pygame_gui.elements.UIButton(
+            relative_rect=quit_btn_rect,
+            text='Quit',
+            manager=self.gui_manager,
+            container=container,
+            anchors={'right': 'right'}
+        )
+        
+        self.gui_elements.extend([self.start_btn, self.quit_btn])
     
     def run(self):
         self.display.fill((155, 155, 155))
-        for button in self.buttons:
-            button.update(self.display)
        
     def handle_events(self, event):
-        for button in self.buttons:
-            if button.handle_event(event):
-                self.gameStateManager.set_state = 'game'
-                break
+        if event.type == pygame_gui.UI_BUTTON_PRESSED:
+            if event.ui_element == self.start_btn:
+                self.game_state_manager.set_state = 'game'
+            elif event.ui_element == self.quit_btn:
+                self.game_state_manager.running = False

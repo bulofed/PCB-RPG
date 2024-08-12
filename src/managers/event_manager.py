@@ -28,3 +28,4 @@ class EventManager:
 
     def handle_other_events(self, event):
         self.loop.states[self.loop.game_state_manager.get_state].handle_events(event)
+        self.loop.gui_manager.process_events(event)
