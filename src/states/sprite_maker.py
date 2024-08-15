@@ -1,7 +1,7 @@
 from src.utils.imports import pygame
-from src.states.state import State
+from src.states.game_state import GameState
 
-class Game(State):
+class SpriteMaker(GameState):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         
@@ -9,10 +9,10 @@ class Game(State):
         pass
     
     def run(self):
-        self.display.fill((0, 0, 0))
+        self.screen.fill((0, 0, 0))
         
     def handle_events(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                self.game_state_manager.set_state = 'main_menu'
+                self.game_state_manager.set_state = 'main menu'
     

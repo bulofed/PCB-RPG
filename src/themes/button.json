@@ -1,0 +1,11 @@
+{
+    "button":
+    {
+        "font":
+        {
+            "name": "GreenYellow",
+            "size": "28",
+            "regular_path": "assets/fonts/GreenYellow.ttf"
+        }
+    }
+}

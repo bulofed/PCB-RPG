@@ -11,7 +11,7 @@ from src.utils.imports import os
 FPS = 60
 MIN_SCREEN_WIDTH = 1280
 MIN_SCREEN_HEIGHT = 720
-GAME_NAME = "PCB MMORPG"
+GAME_NAME = "PCB RPG"
 BG = (0, 0, 0)
 
 
